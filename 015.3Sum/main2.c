@@ -1,4 +1,6 @@
 
+// ÃãÇ¿¹ıÏß
+
 #include <stdlib.h>
 
 int comp(const void *a,const void *b) {
@@ -26,7 +28,9 @@ int** threeSum(int* nums, int numsSize, int* returnSize) {
             int sum = nums[a] + nums[b];
             if (target == sum) {
                 int exist = 0;
-                __int128 key = (nums[i] << 8) | (nums[a] << 4) | nums[b];
+                __int128 _1 = nums[a];
+                __int128 _2 = nums[b];
+                __int128 key = (_1 << 64) | (_2 << 32) | nums[b];
                 for (int x = 0; x < tmpn; ++x) {
                     if (tmp_lst[x] == key) {
                         exist = 1;
