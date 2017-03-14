@@ -40,16 +40,16 @@ class Solution(object):
                     pt_remove(i, j, val)
 
 
-    def solveSudoku(self, board):
+    def solveSudoku(self, rawboard):
         """
         :type board: List[List[str]]
         :rtype: void Do not return anything, modify board in-place instead.
         """
-        rows = len(board)
-        columns = len(board[0])
+        rows = len(rawboard)
+        columns = len(rawboard[0])
         possibleTable = {}
         
-        board = list(map(list, board))
+        board = list(map(list, rawboard))
 
         # 横向可能性
         for i in range(rows):
@@ -135,36 +135,42 @@ class Solution(object):
 
                 for i in v:
                     board = dup_board(_board)
-                    self.pickUnique(board, pt, k[0], k[1], i)
-                    solve_unique(board, pt)
-
-                    if len(pt) == 0:
-                        print('Solved !')
-                        for i in board:
-                            print(list(map(str, i)))
-                        return board
-                    else:
-                        return try_solve(board, pt)
+                    
+                    try:                        
+                        self.pickUnique(board, pt, k[0], k[1], i)
+                        solve_unique(board, pt)
+    
+                        if len(pt) == 0:
+                            # solved
+                            #for i in board:
+                            #    print(list(map(str, i)))
+                            return board
+                        else:
+                            return try_solve(board, pt)
+                    except InvalidBoard:
+                        pass
             else:
-                print('Solved !')
                 return _board
 
 
-        try_solve(board, possibleTable)
-        #print(len(possibleTable))
-        print('-----')
-
-        for i in board:
-            print(list(map(str, i)))
-
-        #if s.i < 7:
-        #    s.i += 1
-        #    self.solveSudoku(board)
+        ret = try_solve(board, possibleTable)
+        
+        if ret:
+            for i in range(len(ret)):
+                for j in range(len(ret[0])):
+                    rawboard[i][j] = str(ret[i][j])
+            #for i in ret:
+            #    print(list(map(str, i)))
+        
+        #print('-----')
+        #for i in board:
+        #    print(list(map(str, i)))
 
 
 s = Solution()
 
-s.i = 1
+#s.solveSudoku(["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."])
 
-s.solveSudoku(["..9748...","7........",".2.1.9...","..7...24.",".64.1.59.",".98...3..","...8.3.2.","........6","...2759.."])
+s.solveSudoku(["...2...63","3....54.1","..1..398.",".......9.","...538...",".3.......",".263..5..","5.37....8","47...1..."])
+
 
