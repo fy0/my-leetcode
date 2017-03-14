@@ -1,5 +1,9 @@
 # coding: utf-8
 
+class InvalidBoard(BaseException):
+    pass
+
+
 class Solution(object):
 
     def pickUnique(self, board, possibleTable, x, y, val):
@@ -7,13 +11,14 @@ class Solution(object):
         rows = len(board)
         columns = len(board[0])
         
-        del possibleTable[x, y]
-        
+        if (x, y) in possibleTable:
+            del possibleTable[x, y]
+
         def pt_remove(i, j, val):
             if val in possibleTable[i, j]:
                 possibleTable[i, j].remove(val)
-                if not possibleTable[i, j]:
-                    del possibleTable[i, j]
+                if len(possibleTable[i, j]) == 0:
+                    raise InvalidBoard
 
         # 横向更新
         for i in range(rows):
@@ -92,35 +97,70 @@ class Solution(object):
                                 possibleTable[x, y] = possible.copy()
                         
 
-        for k, v in possibleTable.items():
-            print(k, v)
+        #for k, v in possibleTable.items():
+        #    print(k, v)
             
-        for i in board:
-            print(list(map(str, i)))
+        #for i in board:
+        #    print(list(map(str, i)))
+        
+        
+        def solve_unique(board, possibleTable):
+            while True:
+                items = []
+                vals = []
+                for k, v in possibleTable.items():
+                    if len(v) == 1:
+                        items.append(k)
+                        vals.append(list(v)[0])
+        
+                for i in range(len(items)):
+                    x, y = items[i]
+                    self.pickUnique(board, possibleTable, x, y, vals[i])
+                    
+                if not items:
+                    break
+                    
+        solve_unique(board, possibleTable)
 
-        while True:
-            items = []
-            vals = []
-            for k, v in possibleTable.items():
-                if len(v) == 1:
-                    items.append(k)
-                    vals.append(list(v)[0])
-    
-            for i in range(len(items)):
-                x, y = items[i]
-                self.pickUnique(board, possibleTable, x, y, vals[i])
-                
-            if not items:
-                break
+        def dup_board(_board):
+            board = _board[:]
+            for _, i in enumerate(board):
+                board[_] = i[:]
+            return board
 
+        def try_solve(_board, _pt):
+            if len(_pt):
+                pt = _pt.copy()
+                k, v = pt.popitem()
+
+                for i in v:
+                    board = dup_board(_board)
+                    self.pickUnique(board, pt, k[0], k[1], i)
+                    solve_unique(board, pt)
+
+                    if len(pt) == 0:
+                        print('Solved !')
+                        for i in board:
+                            print(list(map(str, i)))
+                        return board
+                    else:
+                        return try_solve(board, pt)
+            else:
+                print('Solved !')
+                return _board
+
+
+        try_solve(board, possibleTable)
         #print(len(possibleTable))
         print('-----')
+
         for i in board:
             print(list(map(str, i)))
 
         #if s.i < 7:
         #    s.i += 1
         #    self.solveSudoku(board)
+
 
 s = Solution()
 

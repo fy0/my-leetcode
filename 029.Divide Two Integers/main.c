@@ -1,7 +1,7 @@
 
 #include <stdint.h>
 
-// ËµÊÇ²»ÄÜÓÃ³ı·¨£¬ÆäÊµ²¢²»ÊÇÕâÑù
+// è¯´æ˜¯ä¸èƒ½ç”¨é™¤æ³•ï¼Œå…¶å®å¹¶ä¸æ˜¯è¿™æ ·
 
 int divide(int dividend, int divisor) {
     if (!divisor) return INT_MAX;
