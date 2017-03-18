@@ -5,6 +5,15 @@ class InvalidBoard(BaseException):
 
 
 class Solution(object):
+    
+    def show_pt(self, pt):
+        for k, v in pt.items():
+            print(k, v)
+    
+    def show_board(self, board):
+        for i in board:
+            print(list(map(str, i)))
+        
 
     def pickUnique(self, board, possibleTable, x, y, val):
         board[x][y] = val
@@ -18,6 +27,9 @@ class Solution(object):
             if val in possibleTable[i, j]:
                 possibleTable[i, j].remove(val)
                 if len(possibleTable[i, j]) == 0:
+                    #print(board[i][j])
+                    #print(i, j)
+                    #self.show_board(board)
                     raise InvalidBoard
 
         # 横向更新
@@ -128,15 +140,22 @@ class Solution(object):
                 board[_] = i[:]
             return board
 
+        def dup_pt(_pt):
+            pt = _pt.copy()
+            for k, v in pt.items():
+                pt[k] = v.copy()
+            return pt
+
         def try_solve(_board, _pt):
             if len(_pt):
-                pt = _pt.copy()
+                pt = dup_pt(_pt)
                 k, v = pt.popitem()
 
                 for i in v:
+                    pt = dup_pt(_pt)
                     board = dup_board(_board)
-                    
-                    try:                        
+
+                    try:
                         self.pickUnique(board, pt, k[0], k[1], i)
                         solve_unique(board, pt)
     
@@ -146,7 +165,9 @@ class Solution(object):
                             #    print(list(map(str, i)))
                             return board
                         else:
-                            return try_solve(board, pt)
+                            ret = try_solve(board, pt)
+                            if ret:
+                                return ret
                     except InvalidBoard:
                         pass
             else:
@@ -154,16 +175,17 @@ class Solution(object):
 
 
         ret = try_solve(board, possibleTable)
+        #print(ret)
+        #self.show_board(ret)
         
         if ret:
             for i in range(len(ret)):
-                for j in range(len(ret[0])):
-                    rawboard[i][j] = str(ret[i][j])
+                rawboard[i] = map(str, ret[i])
             #for i in ret:
             #    print(list(map(str, i)))
         
         #print('-----')
-        #for i in board:
+        #for i in rawboard:
         #    print(list(map(str, i)))
 
 
