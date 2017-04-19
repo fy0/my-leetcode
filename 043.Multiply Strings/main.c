@@ -1,4 +1,11 @@
 
+// 311 / 311 test cases passed.
+// Status: Accepted
+// Runtime: 9 ms
+// 辣鸡归辣鸡，还是AC了呀
+// 有机会好好弄弄
+
+
 #include <math.h>
 #include <stdint.h>
 
@@ -189,3 +196,36 @@ _invalid:
 	return NULL;
 }
 
+
+char* bigint_tostr(BigInt *bi) {
+	uint8_t out[300];
+	int num = 0;
+	char *buf = (char*)malloc(300 * sizeof(char));
+	bi = bigint_dup(bi);
+
+	while ((bi->len > 1) || ((bi->len == 1) && (bi->vals[0] != 0))) {
+		out[num++] = (uint8_t)bigint_internal_divmod(bi, 10) + '0';
+	}
+
+	int j = 0;
+	if (bi->neg) buf[j++] = '-';
+	for (int i = num - 1; i >= 0; i--) {
+		buf[j++] = out[i];
+	}
+	if (num == 0) {
+		buf[j++] = '0';
+		num++;
+	}
+
+	bigint_free(bi);
+	buf[num] = '\0';
+	return buf;
+}
+
+
+char* multiply(char* num1, char* num2) {
+    BigInt *a = bigint_new_from_str(num1, strlen(num1), 10);
+    BigInt *b = bigint_new_from_str(num2, strlen(num2), 10);
+    BigInt *ret = bigint_mul(a, b);
+    return bigint_tostr(ret);
+}
