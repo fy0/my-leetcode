@@ -8,18 +8,18 @@ double myPow(double x, int64_t n){
     if (x == 1.0) {
         return 1.0;
     }
+    if (n < 0) {
+        // 强制正数，免去abs
+        return 1.0 / myPow(x, -n);
+    }
     double val = x;
-    int64_t an = labs(n);
     if (n < 128) {
-        for (int64_t i = 1; i < an; i++) {
+        for (int64_t i = 1; i < n; i++) {
             val *= x;
         }
     } else {
-        double ret = myPow(x, an / 2);
-        return ret * ret * (an % 2 ? x : 1);
-    }
-    if (n < 0) {
-        val = 1.0 / val;
+        double ret = myPow(x, n / 2);
+        return ret * ret * (n & 1 ? x : 1);
     }
     return val;
 }
