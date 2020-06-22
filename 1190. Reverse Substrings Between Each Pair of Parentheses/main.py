@@ -21,4 +21,3 @@ class Solution:
         index, ret = solve(0)
         # print(index, ret)
         return ''.join(ret)
-
